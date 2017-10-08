@@ -8,41 +8,48 @@ Definition of PCFG grammar for our parser is like
 
     <source> ::= <target1> <target2> ; probability 
     
-Symbols wrap with "\<>" are non-terminal symbols. Otherwise, its terminal symbols. "probability" is the probability of this rule. Two rules with the same source symbol
+Symbols wrap with `<>` are non-terminal symbols, otherwise, it's terminal symbols. "probability" is the probability of this rule. Two rules with the same source symbol could be merged into one rule with "|" like
 
     <weather> ::= <city> weather ; 0.3
     <weather> ::= weather <city> ; 0.7
 
-Could be merged into one rule with "|" like
+Equal to
 
     <weather> ::= <city> weather ; 0.3 | weather <city> ; 0.7
+
+### Special Symbols
 
 There are also some special symbols in grammar:
 
 - `<root>`: root node of grammar
 - `<nil>`: A black symbol, like epsilon in most books
 
+### Comments
+
 Grammar could be commented using ";", for example
     
     <weather> ::= weather <city> ; 0.7
     ; This is a comment
 
-After grammar defined, it also needs to specify which non-terminal symbols to export using 
+### Export Symbols
+
+Symbols could be exported using `;!exports:` statement. Only exported rules could be seen in parsing tree.
 
     ;!exports: <export_symbol1> <export_symbol2>
 
-Otherwise, only \<root\> symbol will be exported.
 
 ### Example
 
 Here is an example grammar that matches queries like "what's the weather in seattle", "weather in beijing"
 
-    <city> ::= seattle | beijing
-    <whats> ::= what's the | <nil>
-    <root> ::= <whats> weather in <city>
-    
-    ; We only interested in <city>
-    ;!exports: <city>
+```
+<city> ::= seattle | beijing
+<whats> ::= what's the | <nil>
+<root> ::= <whats> weather in <city>
+
+;We only interested in <city>
+;!exports: <city>
+```
 
 ## Programming
 
